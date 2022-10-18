@@ -28,7 +28,7 @@ def csvf2toc(cfname, pfname, delim=';'):
         csv2toc(tocfile, pfname, delim)
         
 
-def csv2toc(csvContent, pfname, delim=';'):
+def csv2toc(csvContent, pfname, delim=';', pageOffset=0):
     doc = fitz.open(pfname)
     toc = []
 
@@ -39,13 +39,12 @@ def csv2toc(csvContent, pfname, delim=';'):
         tocreader = csv.reader(csvContent, delimiter = delim)
 
     for row in tocreader:
-        print(row)
         assert len(row) <= 4, "cannot handle more than 4 entries:\n %s" % (str(row),)
         try:
             p4 = float(row[3])
-            toc.append([int(row[0]), row[1], int(row[2]), p4])
+            toc.append([int(row[0]), row[1], int(row[2])+pageOffset, p4])
         except:
-            toc.append([int(row[0]), row[1], int(row[2])])
+            toc.append([int(row[0]), row[1], int(row[2])+pageOffset])
     doc.set_toc(toc)
     doc.saveIncr()
 

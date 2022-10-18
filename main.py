@@ -29,7 +29,7 @@ def main():
     loadBtn.clicked.connect(lambda:loadBookmark(textEdit))
 
     saveBtn = QPushButton('Save')
-    saveBtn.clicked.connect(lambda:save(w, textEdit))
+    saveBtn.clicked.connect(lambda:save(w, textEdit, poqle))
 
     vbox = QVBoxLayout()
     vbox.addWidget(loadBtn)
@@ -74,9 +74,9 @@ def loadBookmark(textEdit):
     if fileName and fileName[-4:].lower() == ".pdf":
         textEdit.setText(toc2csv(fileName,';','r'))
 
-def save(w, textEdit):
+def save(w, textEdit, poqle):
     try:
-        csv2toc(textEdit.toPlainText(), fileName, ';')
+        csv2toc(textEdit.toPlainText(), fileName, ';', int(poqle.text()))
     except Exception as e:
         w.statusBar().showMessage(str(e))
     else:
