@@ -1,6 +1,7 @@
 import sys
 from PyQt6.QtWidgets import (QMainWindow, QTextEdit, QApplication, QLineEdit, 
-                        QFileDialog, QWidget, QVBoxLayout, QPushButton, QDockWidget, QCheckBox)
+                        QFileDialog, QWidget, QVBoxLayout, QPushButton, 
+                        QDockWidget, QCheckBox, QTableWidget, QTableWidgetItem)
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import Qt
 from pathlib import Path
@@ -14,8 +15,10 @@ loadVC = False
 def main():
 
     app = QApplication(sys.argv)
-    textEdit = QTextEdit()
     w = QMainWindow()
+
+    textEdit = QTextEdit()
+    textEdit.setFontPointSize(12)
 
     pathqle = QLineEdit(w)
     pathqle.setReadOnly(True)
@@ -39,17 +42,16 @@ def main():
     vbox = QVBoxLayout()
     vbox.addWidget(loadBtn)
     vbox.addWidget(cb)
-    vbox.addSpacing(250)
+    vbox.addStretch(1)
     vbox.addWidget(saveBtn)
 
-
-    buttonBar = QWidget()
-    buttonBar.setLayout(vbox)
+    rightBar = QWidget()
+    rightBar.setLayout(vbox)
 
     dock = QDockWidget() 
     dock.setFeatures(QDockWidget.DockWidgetFeature.NoDockWidgetFeatures)
 
-    w.setFixedSize(512, 384)
+    w.setMinimumSize(512, 384)
     w.setWindowTitle('PDFBookMarkII')
     w.setCentralWidget(textEdit)
     w.statusBar().showMessage('File not loaded.')
@@ -60,7 +62,7 @@ def main():
     tb.addAction(selectFile)
 
     w.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
-    dock.setTitleBarWidget(buttonBar)
+    dock.setTitleBarWidget(rightBar)
 
     w.show()
     sys.exit(app.exec())
