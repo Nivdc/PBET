@@ -3,7 +3,7 @@
 import fitz
 import argparse
 
-def toc2csv(fname, delim=';', mode='r'):
+def toc2csv(fname, delim=';', mode='r', loadVC=False):
     doc = fitz.open(fname)
     toc = doc.get_toc(simple = False)
     ext = fname[-4:].lower()
@@ -11,14 +11,14 @@ def toc2csv(fname, delim=';', mode='r'):
     content = ""
     for t in toc:
         t4 = t[3]
-        if ext == ".pdf":
+        if ext == ".pdf" and loadVC == True:
             if t4["kind"] == 1:
                 p4 = str(t4["to"].y)
             else:
                 p4 = "0"
+            rec = delim.join([str(t[0]), t[1].strip(), str(t[2]), p4])
         else:
-            p4 = "0"
-        rec = delim.join([str(t[0]), t[1].strip(), str(t[2]), p4])
+            rec = delim.join([str(t[0]), t[1].strip(), str(t[2])])
         content+=(rec+"\n")
 
     if mode == 'r':
@@ -37,4 +37,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     delim = args.d              # requested CSV delimiter character
     fname = args.doc            # input document filename
-    toc2csv(fname, delim,'w')
+    toc2csv(fname, delim,'w',True)

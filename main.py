@@ -1,5 +1,6 @@
 import sys
-from PyQt6.QtWidgets import QMainWindow, QTextEdit, QApplication, QLineEdit, QFileDialog, QWidget, QVBoxLayout, QPushButton, QDockWidget 
+from PyQt6.QtWidgets import (QMainWindow, QTextEdit, QApplication, QLineEdit, 
+                        QFileDialog, QWidget, QVBoxLayout, QPushButton, QDockWidget, QCheckBox)
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import Qt
 from pathlib import Path
@@ -8,6 +9,7 @@ from toc2csv import toc2csv
 from csv2toc import csv2toc
 
 fileName = None
+loadVC = False
 
 def main():
 
@@ -31,9 +33,15 @@ def main():
     saveBtn = QPushButton('Save')
     saveBtn.clicked.connect(lambda:save(w, textEdit, poqle))
 
+    cb = QCheckBox('loadWithVCoord', w)
+    cb.stateChanged.connect(lambda:SwitchLoadVC())
+
     vbox = QVBoxLayout()
     vbox.addWidget(loadBtn)
+    vbox.addWidget(cb)
+    vbox.addSpacing(250)
     vbox.addWidget(saveBtn)
+
 
     buttonBar = QWidget()
     buttonBar.setLayout(vbox)
@@ -72,15 +80,24 @@ def fileDialog(w,pathqle):
 
 def loadBookmark(textEdit):
     if fileName and fileName[-4:].lower() == ".pdf":
-        textEdit.setText(toc2csv(fileName,';','r'))
+        textEdit.setText(toc2csv(fileName,';','r', loadVC))
 
 def save(w, textEdit, poqle):
     try:
-        csv2toc(textEdit.toPlainText(), fileName, ';', int(poqle.text()))
+        try:
+            po = int(poqle.text())
+        except:
+            po = 0
+
+        csv2toc(textEdit.toPlainText(), fileName, ';', po)
     except Exception as e:
-        w.statusBar().showMessage(str(e))
+        w.statusBar().showMessage("Error: "+str(e))
     else:
         w.statusBar().showMessage("Saved successfully")
+
+def SwitchLoadVC():
+    global loadVC
+    loadVC = not loadVC
 
 if __name__ == '__main__':
     main()

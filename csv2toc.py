@@ -40,11 +40,12 @@ def csv2toc(csvContent, pfname, delim=';', pageOffset=0):
 
     for row in tocreader:
         assert len(row) <= 4, "cannot handle more than 4 entries:\n %s" % (str(row),)
-        try:
+        assert len(row) >= 3, "cannot handle less than 3 entries:\n %s" % (str(row),)
+        if len(row) == 4:
             p4 = float(row[3])
             toc.append([int(row[0]), row[1], int(row[2])+pageOffset, p4])
-        except:
-            toc.append([int(row[0]), row[1], int(row[2])+pageOffset])
+        elif len(row) == 3:
+            toc.append([int(row[0]), row[1], int(row[2])+pageOffset, 0])
     doc.set_toc(toc)
     doc.saveIncr()
 
