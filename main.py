@@ -8,8 +8,11 @@ from pathlib import Path
 from toc2csv import toc2csv
 from csv2toc import csv2toc
 
+from Snipper import Snipper
+
 fileName = None
 loadVC = False
+gTextEdit = None
 
 def main():
 
@@ -18,6 +21,8 @@ def main():
 
     textEdit = QTextEdit()
     textEdit.setFontPointSize(12)
+    global gTextEdit
+    gTextEdit = textEdit        # For ocrCallback. So complicated :<
 
     pathqle = QLineEdit(w)
     pathqle.setReadOnly(True)
@@ -44,18 +49,22 @@ def main():
     loadBtn = QPushButton('LoadBookmark')
     loadBtn.clicked.connect(lambda:loadBookmark(textEdit, delimqle))
 
-    saveBtn = QPushButton('Save')
-    saveBtn.clicked.connect(lambda:save(w, textEdit, poqle, delimqle))
-
     cb = QCheckBox('loadWithVCoord', w)
     cb.stateChanged.connect(lambda:SwitchLoadVC())
+
+    ocrBtn = QPushButton('OCR')
+    ocrBtn.clicked.connect(lambda:ocr(w))
+
+    saveBtn = QPushButton('Save')
+    saveBtn.clicked.connect(lambda:save(w, textEdit, poqle, delimqle))
 
     vbox = QVBoxLayout()
     vbox.addLayout(pohbox)
     vbox.addLayout(delimhbox)
     vbox.addWidget(loadBtn)
     vbox.addWidget(cb)
-    vbox.addStretch(1)
+    vbox.addWidget(ocrBtn)
+    vbox.addStretch(1)          # This doesn't work...I don't know why :<
     vbox.addWidget(saveBtn)
 
     rightBar = QWidget()
@@ -71,8 +80,6 @@ def main():
 
     tb = w.addToolBar("SelectFile")
     tb.addWidget(pathqle)
-    # tb.addWidget(poqle)
-    # tb.addWidget(delimqle)
     tb.addAction(selectFile)
 
     w.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
@@ -81,7 +88,7 @@ def main():
     w.show()
     sys.exit(app.exec())
 
-def fileDialog(w,pathqle):
+def fileDialog(mainWindow,pathqle):
     home_dir = str(Path.home())
     fname = QFileDialog.getOpenFileName(w, 'Open file', home_dir)
 
@@ -89,16 +96,24 @@ def fileDialog(w,pathqle):
         pathqle.setText(fname[0])
         global fileName
         fileName = fname[0]
-        w.statusBar().showMessage("File opened.")
+        mainWindow.statusBar().showMessage("File opened.")
     else:
         pathqle.setText(fname[0])
-        w.statusBar().showMessage("This is not a pdf file.")
+        mainWindow.statusBar().showMessage("This isn't a pdf file.")
 
 def loadBookmark(textEdit, delimqle):
     if fileName and fileName[-4:].lower() == ".pdf":
         textEdit.setText(toc2csv(fileName, delimqle.text(), 'r', loadVC))
 
-def save(w, textEdit, poqle, delimqle):
+def ocr(mainWindow):
+    s = Snipper(mainWindow)
+    s.callback = ocrCallback
+    s.show()
+
+def ocrCallback(reslut):
+    gTextEdit.append(reslut)
+
+def save(mainWindow, textEdit, poqle, delimqle):
     try:
         try:
             po = int(poqle.text())
@@ -107,9 +122,9 @@ def save(w, textEdit, poqle, delimqle):
 
         csv2toc(textEdit.toPlainText(), fileName, delimqle.text(), po)
     except Exception as e:
-        w.statusBar().showMessage("Error: "+str(e))
+        mainWindow.statusBar().showMessage("Error: "+str(e))
     else:
-        w.statusBar().showMessage("Saved successfully")
+        mainWindow.statusBar().showMessage("Saved successfully")
 
 def SwitchLoadVC():
     global loadVC
