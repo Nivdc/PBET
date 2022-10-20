@@ -9,6 +9,8 @@ from PIL import Image
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
+# pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"
+
 class Snipper(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -29,6 +31,7 @@ class Snipper(QtWidgets.QWidget):
         self.start, self.end = QtCore.QPoint(), QtCore.QPoint()
 
         self.callback = None
+        self.lang = 'eng'
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
@@ -72,14 +75,15 @@ class Snipper(QtWidgets.QWidget):
             abs(self.start.x() - self.end.x()),
             abs(self.start.y() - self.end.y()),
         )
+
         if self.callback != None:
-            res = processImage(shot)
+            res = processImage(shot, self.lang)
             self.callback(res)
 
         QtWidgets.QApplication.restoreOverrideCursor()
 
 
-def processImage(img):
+def processImage(img, language):
     buffer = QtCore.QBuffer()
     buffer.open(QtCore.QBuffer.ReadWrite)
     img.save(buffer, "PNG")
@@ -88,17 +92,16 @@ def processImage(img):
 
     try:
         result = pytesseract.image_to_string(
-            pil_img, timeout=5, lang='chi_sim+eng'
+            pil_img, timeout=5, lang=language
         ).strip()
     except RuntimeError as error:
         print(f"ERROR: An error occurred when trying to process the image: {error}")
         return None
 
     if result:
-        print(f'INFO: Copied "{result}" to the textEdit')
         return result
     else:
-        print(f"INFO: Unable to read text from image, did not copy")
+        print(f"INFO: Unable to read text from image.")
         return None
 
 if __name__ == "__main__":

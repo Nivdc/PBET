@@ -52,8 +52,15 @@ def main():
     cb = QCheckBox('loadWithVCoord', w)
     cb.stateChanged.connect(lambda:SwitchLoadVC())
 
+    ocrlanglb = QLabel('OCR lang:', w)
+    ocrlangqle = QLineEdit(w)
+    ocrlangqle.setText("eng")
+    ocrlanghbox = QHBoxLayout()
+    ocrlanghbox.addWidget(ocrlanglb)
+    ocrlanghbox.addWidget(ocrlangqle)
+
     ocrBtn = QPushButton('OCR')
-    ocrBtn.clicked.connect(lambda:ocr(w))
+    ocrBtn.clicked.connect(lambda:ocr(w, ocrlangqle))
 
     saveBtn = QPushButton('Save')
     saveBtn.clicked.connect(lambda:save(w, textEdit, poqle, delimqle))
@@ -64,6 +71,7 @@ def main():
     vbox.addWidget(loadBtn)
     vbox.addWidget(cb)
     vbox.addWidget(ocrBtn)
+    vbox.addLayout(ocrlanghbox)
     vbox.addStretch(1)          # This doesn't work...I don't know why :<
     vbox.addWidget(saveBtn)
 
@@ -90,7 +98,7 @@ def main():
 
 def fileDialog(mainWindow,pathqle):
     home_dir = str(Path.home())
-    fname = QFileDialog.getOpenFileName(w, 'Open file', home_dir)
+    fname = QFileDialog.getOpenFileName(mainWindow, 'Open file', home_dir)
 
     if fname[0] and fname[0][-4:].lower() == ".pdf":
         pathqle.setText(fname[0])
@@ -105,9 +113,10 @@ def loadBookmark(textEdit, delimqle):
     if fileName and fileName[-4:].lower() == ".pdf":
         textEdit.setText(toc2csv(fileName, delimqle.text(), 'r', loadVC))
 
-def ocr(mainWindow):
+def ocr(mainWindow, ocrlangqle):
     s = Snipper(mainWindow)
     s.callback = ocrCallback
+    s.lang = ocrlangqle.text()
     s.show()
 
 def ocrCallback(reslut):
