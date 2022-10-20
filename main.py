@@ -9,6 +9,7 @@ from toc2csv import toc2csv
 from csv2toc import csv2toc
 
 from Snipper import Snipper
+import pytesseract
 
 fileName = None
 loadVC = False
@@ -98,14 +99,14 @@ def main():
 
 def fileDialog(mainWindow,pathqle):
     home_dir = str(Path.home())
-    fname = QFileDialog.getOpenFileName(mainWindow, 'Open file', home_dir)
+    fname = QFileDialog.getOpenFileName(mainWindow, 'Open file', home_dir, "PDFs (*.pdf *.PDF)")
 
     if fname[0] and fname[0][-4:].lower() == ".pdf":
         pathqle.setText(fname[0])
         global fileName
         fileName = fname[0]
         mainWindow.statusBar().showMessage("File opened.")
-    else:
+    elif fname[0]:
         pathqle.setText(fname[0])
         mainWindow.statusBar().showMessage("This isn't a pdf file.")
 
@@ -114,10 +115,41 @@ def loadBookmark(textEdit, delimqle):
         textEdit.setText(toc2csv(fileName, delimqle.text(), 'r', loadVC))
 
 def ocr(mainWindow, ocrlangqle):
-    s = Snipper(mainWindow)
-    s.callback = ocrCallback
-    s.lang = ocrlangqle.text()
-    s.show()
+    try:
+        pytesseract.get_tesseract_version()
+    except EnvironmentError:
+        print(
+            "INFO: Tesseract is either not installed or cannot be reached.\n"
+            "See README file for more information."
+        )
+        home_dir = str(Path.home())
+        fname = QFileDialog.getOpenFileName(mainWindow, 'Select tesseract.exe', home_dir, "exec (*.exe)")
+        if fname[0] and fname[0][-4:].lower() == ".exe":
+            setTesseractPath(fname[0])
+
+    else:
+        s = Snipper(mainWindow)
+        s.callback = ocrCallback
+        s.lang = ocrlangqle.text()
+        s.show()
+
+def setTesseractPath(tpath):
+    pytesseract.pytesseract.tesseract_cmd = tpath
+    pyt_file_path = Path(str(Path(pytesseract.__file__).parent) + "/pytesseract.py")
+
+    #read
+    with open(pyt_file_path, mode='r') as pyt_file:
+        buf = pyt_file.readlines()
+
+    #replace
+    for idx, line in enumerate(buf):
+        if line.startswith("tesseract_cmd ="):
+            buf[idx] = f"tesseract_cmd = r'{tpath}'\n"
+            break
+
+    #rewrite
+    with open(pyt_file_path, mode='w') as pyt_file:
+        pyt_file.writelines(buf)
 
 def ocrCallback(reslut):
     gTextEdit.append(reslut)

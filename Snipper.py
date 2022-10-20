@@ -9,8 +9,6 @@ from PIL import Image
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
-# pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"
-
 class Snipper(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -112,7 +110,7 @@ if __name__ == "__main__":
     except EnvironmentError:
         print(
             "ERROR: Tesseract is either not installed or cannot be reached.\n"
-            "Have you installed it and added the install directory to your system path?"
+            "See README file for more information."
         )
         sys.exit()
 
