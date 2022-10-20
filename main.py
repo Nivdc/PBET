@@ -1,9 +1,8 @@
 import sys
-from PyQt6.QtWidgets import (QMainWindow, QTextEdit, QApplication, QLineEdit, 
-                        QFileDialog, QWidget, QVBoxLayout, QPushButton, 
-                        QDockWidget, QCheckBox, QTableWidget, QTableWidgetItem)
-from PyQt6.QtGui import QAction
-from PyQt6.QtCore import Qt
+from PyQt5.QtWidgets import (QMainWindow, QTextEdit, QApplication, QLineEdit, QAction, 
+                        QFileDialog, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, 
+                        QLabel, QDockWidget, QCheckBox, QTableWidget, QTableWidgetItem)
+from PyQt5.QtCore import Qt
 from pathlib import Path
 
 from toc2csv import toc2csv
@@ -24,22 +23,36 @@ def main():
     pathqle.setReadOnly(True)
     pathqle.setPlaceholderText("Please select a file.")
 
-    poqle = QLineEdit(w)
-    poqle.setPlaceholderText("Page Offset.")
-
     selectFile = QAction('Select', w)
     selectFile.triggered.connect(lambda:fileDialog(w, pathqle))
 
+    polb = QLabel('Page Offset:', w)
+    poqle = QLineEdit(w)
+    poqle.setPlaceholderText("0")
+    pohbox = QHBoxLayout()
+    pohbox.addWidget(polb)
+    pohbox.addWidget(poqle)
+
+    delimlb = QLabel('CSV delimiter:', w)
+    delimqle = QLineEdit(w)
+    delimqle.setText("~")
+    delimqle.setMaxLength(1)
+    delimhbox = QHBoxLayout()
+    delimhbox.addWidget(delimlb)
+    delimhbox.addWidget(delimqle)
+
     loadBtn = QPushButton('LoadBookmark')
-    loadBtn.clicked.connect(lambda:loadBookmark(textEdit))
+    loadBtn.clicked.connect(lambda:loadBookmark(textEdit, delimqle))
 
     saveBtn = QPushButton('Save')
-    saveBtn.clicked.connect(lambda:save(w, textEdit, poqle))
+    saveBtn.clicked.connect(lambda:save(w, textEdit, poqle, delimqle))
 
     cb = QCheckBox('loadWithVCoord', w)
     cb.stateChanged.connect(lambda:SwitchLoadVC())
 
     vbox = QVBoxLayout()
+    vbox.addLayout(pohbox)
+    vbox.addLayout(delimhbox)
     vbox.addWidget(loadBtn)
     vbox.addWidget(cb)
     vbox.addStretch(1)
@@ -51,14 +64,15 @@ def main():
     dock = QDockWidget() 
     dock.setFeatures(QDockWidget.DockWidgetFeature.NoDockWidgetFeatures)
 
-    w.setMinimumSize(512, 384)
+    w.setMinimumSize(600, 400)
     w.setWindowTitle('PDFBookMarkII')
     w.setCentralWidget(textEdit)
     w.statusBar().showMessage('File not loaded.')
 
     tb = w.addToolBar("SelectFile")
     tb.addWidget(pathqle)
-    tb.addWidget(poqle)
+    # tb.addWidget(poqle)
+    # tb.addWidget(delimqle)
     tb.addAction(selectFile)
 
     w.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
@@ -80,18 +94,18 @@ def fileDialog(w,pathqle):
         pathqle.setText(fname[0])
         w.statusBar().showMessage("This is not a pdf file.")
 
-def loadBookmark(textEdit):
+def loadBookmark(textEdit, delimqle):
     if fileName and fileName[-4:].lower() == ".pdf":
-        textEdit.setText(toc2csv(fileName,';','r', loadVC))
+        textEdit.setText(toc2csv(fileName, delimqle.text(), 'r', loadVC))
 
-def save(w, textEdit, poqle):
+def save(w, textEdit, poqle, delimqle):
     try:
         try:
             po = int(poqle.text())
         except:
             po = 0
 
-        csv2toc(textEdit.toPlainText(), fileName, ';', po)
+        csv2toc(textEdit.toPlainText(), fileName, delimqle.text(), po)
     except Exception as e:
         w.statusBar().showMessage("Error: "+str(e))
     else:
