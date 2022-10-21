@@ -5,7 +5,7 @@ But this one support ORC feature.(YeahYeahYeah~)
 However, you must first install tesseract to use the OCR feature.(NoNoNo~)  
 
 ## Screenshot
-![screenshot](./screenshot.png)
+![](./screenshot.png)
 
 ## Usage
 
