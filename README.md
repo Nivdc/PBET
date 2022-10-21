@@ -1,7 +1,7 @@
 # PDFBookmarkII
 
 A(nother) tool for edit bookmarks in PDF file.  
-But this one support ORC feature.(YeahYeahYeah~)  
+But this one support OCR feature.(YeahYeahYeah~)  
 However, you must first install tesseract to use the OCR feature.(NoNoNo~)  
 
 ## Screenshot
@@ -42,7 +42,7 @@ This tool uses pymupdf to manipulate pdf files, check out these links if you wan
 [get_toc](https://pymupdf.readthedocs.io/en/latest/document.html#Document.get_toc)  
 [set_toc](https://pymupdf.readthedocs.io/en/latest/document.html#Document.set_toc)  
 
-## ORC Feature
+## OCR Feature
 
 As mentioned before, you have to install [tesseract](https://github.com/tesseract-ocr/tesseract) to use the OCR feature.  
 Versions for win32 can be found [here](https://github.com/UB-Mannheim/tesseract/wiki) and [here](https://digi.bib.uni-mannheim.de/tesseract/).  
