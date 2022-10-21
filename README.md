@@ -5,7 +5,7 @@ But this one support ORC feature.(YeahYeahYeah~)
 However, you must first install tesseract to use the OCR feature.(NoNoNo~)  
 
 ## Screenshot
-![](./screenshot.png)
+![](https://github.com/Nivdc/PDFBookmarkII/blob/main/screenshot.png)
 
 ## Usage
 
