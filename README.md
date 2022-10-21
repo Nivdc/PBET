@@ -45,7 +45,7 @@ This tool uses pymupdf to manipulate pdf files, check out these links if you wan
 ## ORC Feature
 
 As mentioned before, you have to install [tesseract](https://github.com/tesseract-ocr/tesseract) to use the OCR feature.  
-Versions for win32 can be found [here](https://github.com/UB-Mannheim/tesseract/wiki) and [here](https://links.jianshu.com/go?to=https%3A%2F%2Fdigi.bib.uni-mannheim.de%2Ftesseract%2F).  
+Versions for win32 can be found [here](https://github.com/UB-Mannheim/tesseract/wiki) and [here](https://digi.bib.uni-mannheim.de/tesseract/).  
 
 Once you install it, you need to click the OCR button to tell this tool where ***tesseract.exe*** is.  
 Then set the language you want to recognize and you're good to go. (Just click the OCR button again.)
