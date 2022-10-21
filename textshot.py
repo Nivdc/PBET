@@ -28,7 +28,7 @@ class Snipper(QtWidgets.QWidget):
 
         self.start, self.end = QtCore.QPoint(), QtCore.QPoint()
 
-        self.callback = None
+        self.callback = print
         self.lang = 'eng'
 
     def keyPressEvent(self, event):
@@ -79,6 +79,9 @@ class Snipper(QtWidgets.QWidget):
             self.callback(res)
 
         QtWidgets.QApplication.restoreOverrideCursor()
+
+        if __name__ == "__main__":
+            QtWidgets.QApplication.quit()
 
 
 def processImage(img, language):

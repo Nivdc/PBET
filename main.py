@@ -1,24 +1,30 @@
 import sys
+from pathlib import Path
+from shutil import copyfile
+
+from toc2csv import toc2csv
+from csv2toc import csv2toc
+from textshot import Snipper
+
 from PyQt5.QtWidgets import (QMainWindow, QTextEdit, QApplication, QLineEdit, QAction, 
                         QFileDialog, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, 
                         QLabel, QDockWidget, QCheckBox, QTableWidget, QTableWidgetItem)
 from PyQt5.QtCore import Qt
-from pathlib import Path
 
-from toc2csv import toc2csv
-from csv2toc import csv2toc
-
-from textshot import Snipper
 import pytesseract
 
-fileName = None
-loadVC = False
+gFileName = None
+gLoadVC = False
 gTextEdit = None
+gMainWindow = None
 
 def main():
 
     app = QApplication(sys.argv)
+
     w = QMainWindow()
+    global gMainWindow
+    gMainWindow = w             # For ocrCallback. So complicated :<
 
     textEdit = QTextEdit()
     textEdit.setFontPointSize(12)
@@ -34,7 +40,7 @@ def main():
 
     polb = QLabel('Page Offset:', w)
     poqle = QLineEdit(w)
-    poqle.setPlaceholderText("0")
+    poqle.setText("0")
     pohbox = QHBoxLayout()
     pohbox.addWidget(polb)
     pohbox.addWidget(poqle)
@@ -85,7 +91,7 @@ def main():
     w.setMinimumSize(600, 400)
     w.setWindowTitle('PDFBookMarkII')
     w.setCentralWidget(textEdit)
-    w.statusBar().showMessage('File not loaded.')
+    w.statusBar().showMessage('Ready.')
 
     tb = w.addToolBar("SelectFile")
     tb.addWidget(pathqle)
@@ -103,16 +109,16 @@ def fileDialog(mainWindow,pathqle):
 
     if fname[0] and fname[0][-4:].lower() == ".pdf":
         pathqle.setText(fname[0])
-        global fileName
-        fileName = fname[0]
-        mainWindow.statusBar().showMessage("File opened.")
+        global gFileName
+        gFileName = fname[0]
+        mainWindow.statusBar().showMessage("File selected.")
     elif fname[0]:
         pathqle.setText(fname[0])
-        mainWindow.statusBar().showMessage("This isn't a pdf file.")
+        mainWindow.statusBar().showMessage("ERROR: This is not a pdf file.")
 
 def loadBookmark(textEdit, delimqle):
-    if fileName and fileName[-4:].lower() == ".pdf":
-        textEdit.setText(toc2csv(fileName, delimqle.text(), 'r', loadVC))
+    if gFileName and gFileName[-4:].lower() == ".pdf":
+        textEdit.append(toc2csv(gFileName, delimqle.text(), 'r', gLoadVC))
 
 def ocr(mainWindow, ocrlangqle):
     try:
@@ -152,24 +158,33 @@ def setTesseractPath(tpath):
         pyt_file.writelines(buf)
 
 def ocrCallback(reslut):
-    gTextEdit.append(reslut)
+    if reslut != None:
+        gTextEdit.append(reslut)
+    else:
+        gMainWindow.statusBar().showMessage("Unable to read text from image, try again ?")
 
 def save(mainWindow, textEdit, poqle, delimqle):
     try:
+        newFileName = createNewFile(gFileName)
         try:
             po = int(poqle.text())
         except:
             po = 0
 
-        csv2toc(textEdit.toPlainText(), fileName, delimqle.text(), po)
+        csv2toc(textEdit.toPlainText(), newFileName, delimqle.text(), po)
     except Exception as e:
-        mainWindow.statusBar().showMessage("Error: "+str(e))
+        mainWindow.statusBar().showMessage("ERROR: "+str(e))
     else:
-        mainWindow.statusBar().showMessage("Saved successfully")
+        mainWindow.statusBar().showMessage(f"Saved successfully, The new file name is '{Path(newFileName).name}'.")
+
+def createNewFile(srcFileName):
+    newFileName = srcFileName[:-4] + "-new.pdf"
+    copyfile(srcFileName, newFileName)
+    return newFileName
 
 def SwitchLoadVC():
-    global loadVC
-    loadVC = not loadVC
+    global gLoadVC
+    gLoadVC = not gLoadVC
 
 if __name__ == '__main__':
     main()
