@@ -8,7 +8,7 @@ from pathlib import Path
 from toc2csv import toc2csv
 from csv2toc import csv2toc
 
-from Snipper import Snipper
+from textshot import Snipper
 import pytesseract
 
 fileName = None
