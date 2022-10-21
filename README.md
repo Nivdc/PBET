@@ -14,7 +14,8 @@ However, you must first install tesseract to use the OCR feature.(NoNoNo~)
 3. (optional) Use OCR to get book catalog.
 4. Edit bookmarks. (Format details see below.)
 5. (optional) Set page number offset.
-6. Click 'Save'. The name of the new file is '(*your file*)-new.pdf' .  
+6. Click 'Save'.  
+   The name of the new file is ```(your file name)-new.pdf``` .  
    **Note that if a file with the same name exists, the save button will overwrite it without any warning!**
 
 ## Bookmark Format
@@ -47,11 +48,13 @@ This tool uses pymupdf to manipulate pdf files, check out these links if you wan
 As mentioned before, you have to install [tesseract](https://github.com/tesseract-ocr/tesseract) to use the OCR feature.  
 Versions for win32 can be found [here](https://github.com/UB-Mannheim/tesseract/wiki) and [here](https://digi.bib.uni-mannheim.de/tesseract/).  
 
+>WARNING: Tesseract should be either installed in the directory which is suggested during the installation or in a new directory. The uninstaller removes the whole installation directory. If you installed Tesseract in an existing directory, that directory will be removed with all its subdirectories and files.
+
 Once you install it, you need to click the OCR button to tell this tool where ***tesseract.exe*** is.  
 Then set the language you want to recognize and you're good to go. (Just click the OCR button again.)
 
 If you missed downloading language packs during installation, you can find them at this [link](https://github.com/tesseract-ocr/tessdata).  
-Download and put them in ```(your tesseract installation directory)/tessdata```.
+Download and put them in ```(tesseract installation directory)/tessdata```.
 
 If you want to recognize multiple languages, just enter ```[first language code]+[second language code]+...``` in the language input box.  
 Language codes can be found in this [document](https://github.com/tesseract-ocr/tessdoc/blob/main/Data-Files-in-different-versions.md).
