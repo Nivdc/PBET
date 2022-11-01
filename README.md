@@ -1,8 +1,8 @@
 # PDFBookmarkII
 
 A(nother) tool for edit bookmarks in PDF file.  
-But this one support OCR feature.(YeahYeahYeah~)  
-However, you must first install tesseract to use the OCR feature.(NoNoNo~)  
+But this one support OCR feature.(Oh, Yeah~)  
+However, you must first install tesseract to use the OCR feature.(Oh, No~)  
 
 ## Screenshot
 ![](./screenshot.png)
@@ -48,7 +48,10 @@ This tool uses pymupdf to manipulate pdf files, check out these links if you wan
 As mentioned before, you have to install [tesseract](https://github.com/tesseract-ocr/tesseract) to use the OCR feature.  
 Versions for win32 can be found [here](https://github.com/UB-Mannheim/tesseract/wiki) and [here](https://digi.bib.uni-mannheim.de/tesseract/).  
 
->WARNING: Tesseract should be either installed in the directory which is suggested during the installation or in a new directory. The uninstaller removes the whole installation directory. If you installed Tesseract in an existing directory, that directory will be removed with all its subdirectories and files.
+>WARNING: 
+>Tesseract should be either installed in the directory which is suggested during the installation or in a new directory. 
+>The uninstaller removes the whole installation directory. 
+>If you installed Tesseract in an existing directory, that directory will be removed with all its subdirectories and files.  
 
 Once you install it, you need to click the OCR button to tell this tool where ***tesseract.exe*** is.  
 Then set the language you want to recognize and you're good to go. (Just click the OCR button again.)
