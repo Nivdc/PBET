@@ -57,7 +57,7 @@ def main():
     loadBtn.clicked.connect(lambda:loadBookmark(textEdit, delimqle))
 
     cb = QCheckBox('loadWithVCoord', w)
-    cb.stateChanged.connect(lambda:SwitchLoadVC())
+    cb.stateChanged.connect(lambda:switchLoadVC())
 
     ocrlanglb = QLabel('OCR lang:', w)
     ocrlangqle = QLineEdit(w)
@@ -126,7 +126,7 @@ def ocr(mainWindow, ocrlangqle):
     except EnvironmentError:
         print(
             "INFO: Tesseract is either not installed or cannot be reached.\n"
-            "See README file for more information."
+            "Please select tesseract.exe, see README file for more information."
         )
         home_dir = str(Path.home())
         fname = QFileDialog.getOpenFileName(mainWindow, 'Select tesseract.exe', home_dir, "exec (*.exe)")
@@ -182,7 +182,7 @@ def createNewFile(srcFileName):
     copyfile(srcFileName, newFileName)
     return newFileName
 
-def SwitchLoadVC():
+def switchLoadVC():
     global gLoadVC
     gLoadVC = not gLoadVC
 
