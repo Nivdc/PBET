@@ -54,7 +54,7 @@ def main():
     delimhbox.addWidget(delimqle)
 
     loadBtn = QPushButton('LoadBookmark')
-    loadBtn.clicked.connect(lambda:loadBookmark(textEdit, delimqle))
+    loadBtn.clicked.connect(lambda:loadBookmark(textEdit, delimqle, poqle))
 
     cb = QCheckBox('loadWithVCoord', w)
     cb.stateChanged.connect(lambda:switchLoadVC())
@@ -89,7 +89,7 @@ def main():
     dock.setFeatures(QDockWidget.DockWidgetFeature.NoDockWidgetFeatures)
 
     w.setMinimumSize(600, 400)
-    w.setWindowTitle('PDFBookMarkII')
+    w.setWindowTitle('PBET')
     w.setCentralWidget(textEdit)
     w.statusBar().showMessage('Ready.')
 
@@ -116,9 +116,14 @@ def fileDialog(mainWindow,pathqle):
         pathqle.setText(fname[0])
         mainWindow.statusBar().showMessage("ERROR: This is not a pdf file.")
 
-def loadBookmark(textEdit, delimqle):
+def loadBookmark(textEdit, delimqle, poqle):
     if gFileName and gFileName[-4:].lower() == ".pdf":
-        textEdit.append(toc2csv(gFileName, delimqle.text(), 'r', gLoadVC))
+        try:
+            po = int(poqle.text())
+        except:
+            po = 0
+
+        textEdit.append(toc2csv(gFileName, delimqle.text(), 'r', gLoadVC, po))
 
 def ocr(mainWindow, ocrlangqle):
     try:
@@ -175,7 +180,7 @@ def save(mainWindow, textEdit, poqle, delimqle):
     except Exception as e:
         mainWindow.statusBar().showMessage("ERROR: "+str(e))
     else:
-        mainWindow.statusBar().showMessage(f"Saved successfully, The new file name is '{Path(newFileName).name}'.")
+        mainWindow.statusBar().showMessage(f"Saved successfully, The new file is '{Path(newFileName).name}'.")
 
 def createNewFile(srcFileName):
     newFileName = srcFileName[:-4] + "-new.pdf"

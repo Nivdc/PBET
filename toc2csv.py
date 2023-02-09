@@ -1,9 +1,10 @@
 #Original version copy from https://github.com/pymupdf/PyMuPDF-Utilities/blob/master/examples/toc2csv.py
+#This file uses its original License: GNU GPL V3.
 
 import fitz
 import argparse
 
-def toc2csv(fname, delim=';', mode='r', loadVC=False):
+def toc2csv(fname, delim=';', mode='r', loadVC=False, pageOffset=0):
     doc = fitz.open(fname)
     toc = doc.get_toc(simple = False)
     ext = fname[-4:].lower()
@@ -16,9 +17,9 @@ def toc2csv(fname, delim=';', mode='r', loadVC=False):
                 p4 = str(t4["to"].y)
             else:
                 p4 = "0"
-            rec = delim.join([str(t[0]), t[1].strip(), str(t[2]), p4])
+            rec = delim.join([str(t[0]), t[1].strip(), str(t[2]-pageOffset), p4])
         else:
-            rec = delim.join([str(t[0]), t[1].strip(), str(t[2])])
+            rec = delim.join([str(t[0]), t[1].strip(), str(t[2]-pageOffset)])
         content+=(rec+"\n")
 
     if mode == 'r':

@@ -1,22 +1,25 @@
-# PDFBookmarkII
+# PBET
+PBET - pdf bookmark edit tool.  
 
 A(nother) tool for edit bookmarks in PDF file.  
-But this one support OCR feature.(Oh, Yeah~)  
-However, you must first install tesseract to use the OCR feature.(Oh, No~)  
+But this one support OCR feature.😎  
+However, you must first install tesseract to use the OCR feature.😭  
 
 ## Screenshot
 ![](./screenshot.png)
 
 ## Usage
+If you are using the Releases version, double-click "run.bat" first.
 
 1. Select the pdf file you want to edit.
 2. (optional) Load existing bookmarks.
 3. (optional) Use OCR to get book catalog.
 4. Edit bookmarks. (Format details see below.)
 5. (optional) Set page number offset.
-6. Click 'Save'.  
-   The name of the new file is ```(your file name)-new.pdf``` .  
-   **Note that if a file with the same name exists, the save button will overwrite it without any warning!**
+6. Make sure there is no risk!  
+   The name of the new file will be ```(your file name)-new.pdf``` .  
+   **Note that if a file with the same name exists in the source file directory, The save button will overwrite it without any warning!**
+7. Click 'Save'. 
 
 ## Bookmark Format
 
@@ -40,7 +43,8 @@ Note that when the title contains a delimiter, the program obviously cannot pars
 You need to choose to use another delimiter.  
 
 This tool uses pymupdf to manipulate pdf files, check out these links if you want more details.  
-[get_toc](https://pymupdf.readthedocs.io/en/latest/document.html#Document.get_toc)  
+[get_toc](https://pymupdf.readthedocs.io/en/latest/document.html#Document.get_toc)
+&
 [set_toc](https://pymupdf.readthedocs.io/en/latest/document.html#Document.set_toc)  
 
 ## OCR Feature
@@ -64,6 +68,6 @@ Language codes can be found in this [document](https://github.com/tesseract-ocr/
 
 The recognition of the ocr tool may not be successful every time, and it may take several attempts.
 
-## Other
-
-The new file may lose some metadata, Check out this [document](https://docs.python.org/3/library/shutil.html) for more details.  
+## Other Things
+- If you need to edit more than 20 bookmarks, I recommend you use Excel to edit the CSV.  
+- The new file may lose some metadata, Check out this [document](https://docs.python.org/3/library/shutil.html) for more details.  
