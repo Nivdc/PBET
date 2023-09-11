@@ -66,7 +66,7 @@ Download and put them in ```(tesseract installation directory)/tessdata```.
 If you want to recognize multiple languages, just enter ```[first language code]+[second language code]+...``` in the language input box.  
 Language codes can be found in this [document](https://github.com/tesseract-ocr/tessdoc/blob/main/Data-Files-in-different-versions.md).
 
-The recognition of the ocr tool may not be successful every time, and it may take several attempts.
+Recognition by the OCR tool may not be successful every time and may require multiple attempts.
 
 ## Other Things
 - If you need to edit more than 20 bookmarks, I recommend you use Excel to edit the CSV.  
